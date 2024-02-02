@@ -1,8 +1,9 @@
 package gdsc.realworld.controller;
 
+import gdsc.realworld.domain.UserWrapper;
+import gdsc.realworld.entity.User;
 import gdsc.realworld.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
