@@ -1,7 +1,5 @@
 package gdsc.realworld.controller;
 
-import gdsc.realworld.domain.UserDTO;
-import gdsc.realworld.domain.UserWrapper;
 import gdsc.realworld.entity.User;
 import gdsc.realworld.exception.UserNotFoundException;
 import gdsc.realworld.login.JwtUtil;
