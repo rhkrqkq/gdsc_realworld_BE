@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -31,16 +33,19 @@ public class User {
     private String username;
 
     private String bio;
-    private String image;
+    private String image = "https://api.realworld.io/images/smiley-cyrus.jpg";
 
     public User(UserDTO userDTO) {
-        this.username = userDTO.getPassword();
+        this.email = getEmail();
+        this.password = userDTO.getPassword();
         this.username = userDTO.getUsername();
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void setBio(String bio) { this.bio = bio; }
 
     public String getPassword() {
         return password;
