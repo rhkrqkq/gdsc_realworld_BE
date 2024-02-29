@@ -1,5 +1,6 @@
 package gdsc.realworld.service;
 
+import gdsc.realworld.config.JwtToken;
 import gdsc.realworld.exception.UserNotFoundException;
 import gdsc.realworld.repository.UserRepository;
 import gdsc.realworld.entity.User;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public abstract class UserService {
 
     @Autowired
     private final UserRepository userRepository;
@@ -21,8 +22,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findByUserName(String username) {
-        return Optional.ofNullable(userRepository.findByUserName(username))
+    public Optional<User> findUsername(String username) {
+        return Optional.ofNullable(userRepository.findByUsername(username))
                 .orElseThrow(UserNotFoundException::new);
     }
 
@@ -41,4 +42,8 @@ public class UserService {
         return userOptional.filter(user -> user.getPassword().equals(password))
                 .orElseThrow(UserNotFoundException::new);
     }
+
+    @Transactional
+    public abstract JwtToken signIn(String username, String password);
+
 }

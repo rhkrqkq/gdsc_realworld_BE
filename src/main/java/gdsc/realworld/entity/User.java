@@ -1,22 +1,19 @@
 package gdsc.realworld.entity;
 
-import gdsc.realworld.domain.UserDTO;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@NoArgsConstructor
-public class User {
+public class User implements UserDetails {
 
     @jakarta.persistence.Id
     @Id
@@ -35,10 +32,10 @@ public class User {
     private String bio;
     private String image = "https://api.realworld.io/images/smiley-cyrus.jpg";
 
-    public User(UserDTO userDTO) {
+    public User() {
         this.email = getEmail();
-        this.password = userDTO.getPassword();
-        this.username = userDTO.getUsername();
+        this.password = getPassword();
+        this.username = getUsername();
     }
 
     public void setEmail(String email) {
@@ -49,18 +46,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public void setImage(String image) {
@@ -81,12 +66,34 @@ public class User {
         return Objects.hash(id, username, email, password);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }
-
